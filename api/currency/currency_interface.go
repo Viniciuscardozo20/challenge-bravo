@@ -1,8 +1,8 @@
 package currency
 
 type Currency interface {
-	NewCurrency(name string) (*currency, error)
-	CurrencyConvert(convert currencyConvert) (float32, error)
+	NewCurrency(name string) error
+	Convert(convert CurrencyConvert) (float64, error)
 	DeleteCurrency(currency Currency) error
-	GetCurrency(name string) (*currency, error)
+	GetAllCurrencies() map[string]float64
 }
