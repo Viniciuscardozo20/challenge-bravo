@@ -19,26 +19,31 @@ type CurrencyConvert struct {
 	amount float64
 }
 
-func Init() error {
-	err := currency_updater.CurrencyLive()
+type currency struct {
+	updater *currency_updater.Updater
+}
+
+func Init() (Currency, error) {
+	upd := currency_updater.NewUpdater()
+	err := upd.CurrencyLive()
 	if err != nil {
-		return err
+		return nil, err
 	}
 	go func() {
 		for {
 			<-time.Tick(time.Minute * 2)
-			currency_updater.CurrencyLive()
+			upd.CurrencyLive()
 		}
 	}()
-	return nil
+	return &currency{updater: upd}, nil
 }
 
-func NewCurrency(name string) error {
+func (c *currency) NewCurrency(name string) error {
 	name = strings.ToUpper(name)
-	if _, ok := currency_updater.Currencies[name]; ok {
+	if _, ok := c.updater.Currencies[name]; ok {
 		return errors.New("This currency is already existis")
 	}
-	body, err := currency_updater.GetRates(urlRates)
+	body, err := c.updater.GetRates(urlRates)
 	if err != nil {
 		log.Fatal("Error to get currencies")
 		return err
@@ -47,31 +52,31 @@ func NewCurrency(name string) error {
 	if !res.Exists() {
 		return errors.New("This currencys does not exists in our currency bases")
 	}
-	currency_updater.Currencies[name] = res.Float()
+	c.updater.Currencies[name] = res.Float()
 	return nil
 }
 
-func DeleteCurrency(name string) error {
+func (c *currency) DeleteCurrency(name string) error {
 	name = strings.ToUpper(name)
-	if _, ok := currency_updater.Currencies[name]; ok {
-		delete(currency_updater.Currencies, name)
+	if _, ok := c.updater.Currencies[name]; ok {
+		delete(c.updater.Currencies, name)
 		return nil
 	}
 	return errors.New("This currency does not exists")
 }
 
-func Convert(convert CurrencyConvert) (*float64, error) {
+func (c *currency) Convert(convert CurrencyConvert) (*float64, error) {
 	convert.from = strings.ToUpper(convert.from)
-	if _, ok := currency_updater.Currencies[convert.from]; ok {
+	if _, ok := c.updater.Currencies[convert.from]; ok {
 		return nil, errors.New("This currency does not exists")
 	}
-	if _, ok := currency_updater.Currencies[convert.to]; ok {
+	if _, ok := c.updater.Currencies[convert.to]; ok {
 		return nil, errors.New("This currency does not exists")
 	}
-	value := ((1 / currency_updater.Currencies[convert.from]) * currency_updater.Currencies[convert.to]) * convert.amount
+	value := ((1 / c.updater.Currencies[convert.from]) * c.updater.Currencies[convert.to]) * convert.amount
 	return &value, nil
 }
 
-func GetAllCurrencies() map[string]float64 {
-	return currency_updater.Currencies
+func (c *currency) GetAllCurrencies() map[string]float64 {
+	return c.updater.Currencies
 }
