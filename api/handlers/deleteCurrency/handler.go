@@ -4,7 +4,6 @@ import (
 	"challenge-bravo/api/controller"
 
 	httping "github.com/ednailson/httping-go"
-	"github.com/go-playground/validator/v10"
 )
 
 type Handler struct {
@@ -23,10 +22,5 @@ func (h *Handler) Handle(request httping.HttpRequest) httping.IResponse {
 	if err != nil {
 		return httping.InternalServerError(map[string]string{"err": err.Error()})
 	}
-	return httping.OK(map[string]string{"success": "currency deleted"})
-}
-
-func Validate(data interface{}) error {
-	validate := validator.New()
-	return validate.Struct(data)
+	return httping.OK(map[string]string{"status": "success"})
 }

@@ -44,7 +44,7 @@ func (a *App) Close() {
 func loadServer(ctrl *controller.Controller) httping.IServer {
 	server := httping.NewHttpServer("", 8082)
 	addCurrencyHandler := addCurrency.NewHandler(*ctrl)
-	server.NewRoute(nil, "/v1/addCurrency/:currency").POST(addCurrencyHandler.Handle)
+	server.NewRoute(nil, "/v1/addCurrency").POST(addCurrencyHandler.Handle)
 	convertHandler := convert.NewHandler(*ctrl)
 	server.NewRoute(nil, "/v1/currencyConvert").GET(convertHandler.Handle)
 	deleteCurrencyHandler := deleteCurrency.NewHandler(*ctrl)

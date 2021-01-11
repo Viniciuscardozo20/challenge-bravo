@@ -5,11 +5,17 @@ import (
 	"strconv"
 
 	httping "github.com/ednailson/httping-go"
-	"github.com/go-playground/validator/v10"
 )
 
 type Handler struct {
 	ctl controller.Controller
+}
+
+type converted struct {
+	From   string
+	To     string
+	Amount float64
+	Value  float64
 }
 
 func NewHandler(ctl controller.Controller) *Handler {
@@ -37,10 +43,10 @@ func (h *Handler) Handle(request httping.HttpRequest) httping.IResponse {
 	if err != nil {
 		return httping.InternalServerError(map[string]string{"err": err.Error()})
 	}
-	return httping.OK(value)
-}
-
-func Validate(data interface{}) error {
-	validate := validator.New()
-	return validate.Struct(data)
+	var crv converted
+	crv.From = from
+	crv.To = to
+	crv.Amount = parsedAmount
+	crv.Value = *value
+	return httping.OK(map[string]interface{}{"status": "success", "data": crv})
 }
