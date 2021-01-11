@@ -14,9 +14,9 @@ import (
 const urlRates = `https://api.exchangeratesapi.io/latest?base=USD`
 
 type CurrencyConvert struct {
-	from   string
-	to     string
-	amount float64
+	From   string
+	To     string
+	Amount float64
 }
 
 type currency struct {
@@ -66,14 +66,14 @@ func (c *currency) DeleteCurrency(name string) error {
 }
 
 func (c *currency) Convert(convert CurrencyConvert) (*float64, error) {
-	convert.from = strings.ToUpper(convert.from)
-	if _, ok := c.updater.Currencies[convert.from]; ok {
+	convert.From = strings.ToUpper(convert.From)
+	if _, ok := c.updater.Currencies[convert.From]; ok {
 		return nil, errors.New("This currency does not exists")
 	}
-	if _, ok := c.updater.Currencies[convert.to]; ok {
+	if _, ok := c.updater.Currencies[convert.To]; ok {
 		return nil, errors.New("This currency does not exists")
 	}
-	value := ((1 / c.updater.Currencies[convert.from]) * c.updater.Currencies[convert.to]) * convert.amount
+	value := ((1 / c.updater.Currencies[convert.From]) * c.updater.Currencies[convert.To]) * convert.Amount
 	return &value, nil
 }
 
