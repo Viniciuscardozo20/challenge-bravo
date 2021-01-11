@@ -3,10 +3,10 @@ package app
 import (
 	"challenge-bravo/api/controller"
 	"challenge-bravo/api/currency"
-	"challenge-bravo/handlers/addCurrency"
-	"challenge-bravo/handlers/convert"
-	"challenge-bravo/handlers/deleteCurrency"
-	"challenge-bravo/handlers/getCurrencies"
+	"challenge-bravo/api/handlers/addCurrency"
+	"challenge-bravo/api/handlers/convert"
+	"challenge-bravo/api/handlers/deleteCurrency"
+	"challenge-bravo/api/handlers/getCurrencies"
 
 	httping "github.com/ednailson/httping-go"
 	log "github.com/sirupsen/logrus"
@@ -46,10 +46,10 @@ func loadServer(ctrl *controller.Controller) httping.IServer {
 	addCurrencyHandler := addCurrency.NewHandler(*ctrl)
 	server.NewRoute(nil, "/v1/addCurrency/:currency").POST(addCurrencyHandler.Handle)
 	convertHandler := convert.NewHandler(*ctrl)
-	server.NewRoute(nil, "/v1/currency").POST(convertHandler.Handle)
+	server.NewRoute(nil, "/v1/currencyConvert").GET(convertHandler.Handle)
 	deleteCurrencyHandler := deleteCurrency.NewHandler(*ctrl)
-	server.NewRoute(nil, "/v1/deleteCurrency/:currency").POST(deleteCurrencyHandler.Handle)
+	server.NewRoute(nil, "/v1/deleteCurrency/:currency").DELETE(deleteCurrencyHandler.Handle)
 	getCurrenciesHandler := getCurrencies.NewHandler(*ctrl)
-	server.NewRoute(nil, "/v1/getCurrencies").POST(getCurrenciesHandler.Handle)
+	server.NewRoute(nil, "/v1/getCurrencies").GET(getCurrenciesHandler.Handle)
 	return server
 }

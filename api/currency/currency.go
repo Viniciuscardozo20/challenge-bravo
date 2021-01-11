@@ -67,10 +67,13 @@ func (c *currency) DeleteCurrency(name string) error {
 
 func (c *currency) Convert(convert CurrencyConvert) (*float64, error) {
 	convert.From = strings.ToUpper(convert.From)
-	if _, ok := c.updater.Currencies[convert.From]; ok {
+	fmt.Println(convert.From)
+	fmt.Println(c.updater.Currencies[convert.From])
+	if _, ok := c.updater.Currencies[convert.From]; ok != true {
 		return nil, errors.New("This currency does not exists")
 	}
-	if _, ok := c.updater.Currencies[convert.To]; ok {
+	fmt.Println(convert.To)
+	if _, ok := c.updater.Currencies[convert.To]; ok != true {
 		return nil, errors.New("This currency does not exists")
 	}
 	value := ((1 / c.updater.Currencies[convert.From]) * c.updater.Currencies[convert.To]) * convert.Amount

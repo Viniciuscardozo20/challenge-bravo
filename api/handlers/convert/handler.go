@@ -17,20 +17,23 @@ func NewHandler(ctl controller.Controller) *Handler {
 }
 
 func (h *Handler) Handle(request httping.HttpRequest) httping.IResponse {
-	if request.Params["to"] == "" {
+	var to = request.Query.Get("to")
+	if to == "" {
 		return httping.BadRequest(map[string]string{"to": "the field to is required"})
 	}
-	if request.Params["from"] == "" {
+	var from = request.Query.Get("from")
+	if from == "" {
 		return httping.BadRequest(map[string]string{"to": "the field from is required"})
 	}
-	if request.Params["amount"] == "" {
+	var amount = request.Query.Get("amount")
+	if amount == "" {
 		return httping.BadRequest(map[string]string{"to": "the field amount is required"})
 	}
-	amount, err := strconv.ParseFloat(request.Params["amount"], 64)
+	parsedAmount, err := strconv.ParseFloat(amount, 64)
 	if err != nil {
 		return httping.BadRequest(map[string]string{"amount": "invalid type for amount"})
 	}
-	value, err := h.ctl.Convert(request.Params["to"], request.Params["from"], amount)
+	value, err := h.ctl.Convert(to, from, parsedAmount)
 	if err != nil {
 		return httping.InternalServerError(map[string]string{"err": err.Error()})
 	}
