@@ -149,8 +149,25 @@ _Status http_: `200 OK`
 }
 ```
 
-## Rodar os testes
+## Executar os testes
 ### Requesitos
 
 * GoLang 1:15
 
+Para executar os testes feitos é necessario entrar na pasta ./api do projeto e rodar o comando:
+
+  `make run-tests` 
+
+A a saída esperada será a seguinte: 
+
+    
+      go test -race -coverpkg= ./... -coverprofile=./test/cover/cover.out
+      ?       challenge-bravo/api     [no test files]
+      ?       challenge-bravo/api/app [no test files]
+      ok      challenge-bravo/api/controller  3.239s  coverage: 62.5% of statements
+      ok      challenge-bravo/api/currency    3.212s  coverage: 62.2% of statements
+      ok      challenge-bravo/api/currency/currency_updater   1.597s  coverage: 75.0% of statements
+      ?       challenge-bravo/api/handlers/addCurrency        [no test files]
+      ?       challenge-bravo/api/handlers/convert    [no test files]
+      ?       challenge-bravo/api/handlers/deleteCurrency     [no test files]
+      ?       challenge-bravo/api/handlers/getCurrencies      [no test files] 
