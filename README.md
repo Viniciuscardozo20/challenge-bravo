@@ -158,7 +158,7 @@ Para executar os testes feitos é necessario entrar na pasta ./api do projeto e 
 
   `make run-tests` 
 
-A a saída esperada será a seguinte: 
+A saída esperada será a seguinte: 
 
     
       go test -race -coverpkg= ./... -coverprofile=./test/cover/cover.out
